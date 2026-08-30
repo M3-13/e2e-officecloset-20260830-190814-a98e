@@ -34,8 +34,10 @@ def client(engine):
 
     app.dependency_overrides[get_db] = override_get_db
     reset_rate_limits()
-    yield TestClient(app)
-    app.dependency_overrides.clear()
+    try:
+        yield TestClient(app)
+    finally:
+        app.dependency_overrides.pop(get_db, None)
 
 
 def _register(client, email="user@example.com", password="secret"):
