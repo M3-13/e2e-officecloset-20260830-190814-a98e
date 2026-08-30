@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const errorStyle = { color: 'var(--color-danger)', fontSize: '14px', margin: 0 };
@@ -12,8 +12,7 @@ const switchStyle = {
 };
 
 export default function Login() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { login, user } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,12 +25,15 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
-      navigate('/wardrobe');
     } catch (err) {
       setError(err && err.message ? err.message : 'Anmeldung fehlgeschlagen.');
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (user) {
+    return <Navigate to="/wardrobe" replace />;
   }
 
   return (

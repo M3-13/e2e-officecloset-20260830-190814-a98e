@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const errorStyle = { color: 'var(--color-danger)', fontSize: '14px', margin: 0 };
@@ -12,8 +12,7 @@ const switchStyle = {
 };
 
 export default function Register() {
-  const { register } = useAuth();
-  const navigate = useNavigate();
+  const { register, user } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,12 +32,15 @@ export default function Register() {
     setSubmitting(true);
     try {
       await register(email, password);
-      navigate('/wardrobe');
     } catch (err) {
       setError(err && err.message ? err.message : 'Registrierung fehlgeschlagen.');
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (user) {
+    return <Navigate to="/wardrobe" replace />;
   }
 
   return (
